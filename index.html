@@ -37,22 +37,61 @@
         .button:hover {
             background-color: #0056b3;
         }
+        .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1>Баланс</h1>
+        <input type="text" id="keyInput" placeholder="Введите ваш ключ" />
+        <button class="button" onclick="checkKey()">Проверить</button>
         <div class="balance" id="balance">Ваш баланс: 0</div>
         <button class="button" onclick="increaseBalance()">Добавить +1</button>
+        <div class="error" id="error"></div>
     </div>
 
     <script>
         let balance = 0;
+        let key = '';
+
+        function checkKey() {
+            key = document.getElementById('keyInput').value;
+            fetch(`https://your-api-endpoint.com/check_key?key=${key}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        balance = data.balance;
+                        document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+                        document.getElementById('error').textContent = '';
+                    } else {
+                        document.getElementById('error').textContent = 'Неверный ключ!';
+                    }
+                });
+        }
 
         function increaseBalance() {
-            balance += 1;
-            const balanceElement = document.getElementById('balance');
-            balanceElement.textContent = `Ваш баланс: ${balance}`;
+            if (key) {
+                fetch('https://your-api-endpoint.com/increase_balance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ key: key }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        balance = data.balance;
+                        document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+                    }
+                });
+            } else {
+                document.getElementById('error').textContent = 'Сначала введите ключ!';
+            }
         }
     </script>
 </body>
 </html>
+
