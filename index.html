@@ -41,18 +41,45 @@
 </head>
 <body>
     <div class="container">
-        <div class="balance" id="balance">Ваш баланс: 0</div>
+        <div class="balance" id="balance">Загрузка...</div>
         <button class="button" onclick="increaseBalance()">Добавить +1</button>
     </div>
 
     <script>
-        let balance = 0;
+        const userKey = 'YOUR_USER_KEY'; // Замените на реальный ключ пользователя
 
-        function increaseBalance() {
-            balance += 1;
-            const balanceElement = document.getElementById('balance');
-            balanceElement.textContent = `Ваш баланс: ${balance}`;
+        async function fetchBalance() {
+            const response = await fetch('/check_key', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ key: userKey })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                document.getElementById('balance').textContent = `Ваш баланс: ${result.balance}`;
+            } else {
+                document.getElementById('balance').textContent = 'Не удалось загрузить баланс.';
+            }
         }
+
+        async function increaseBalance() {
+            const response = await fetch('/update_balance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ key: userKey, balance: balance + 1 })
+            });
+
+            if (response.ok) {
+                balance += 1;
+                document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+            } else {
+                document.getElementById('balance').textContent = 'Не удалось обновить баланс.';
+            }
+        }
+
+        // Загрузить баланс при загрузке страницы
+        fetchBalance();
     </script>
 </body>
 </html>
