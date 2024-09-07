@@ -7,12 +7,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
         }
         .container {
             text-align: center;
@@ -21,6 +22,7 @@
             background-color: #fff;
             border-radius: 8px;
             width: 300px;
+            margin-bottom: 100px; /* Отступ, чтобы оставить место для монеток */
         }
         .balance {
             font-size: 24px;
@@ -37,6 +39,17 @@
             width: 160px; /* Размер монетки увеличен в 5 раз */
             height: 160px; /* Размер монетки увеличен в 5 раз */
         }
+        .coins-container {
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            bottom: 20px; /* Отступ от низа экрана */
+            width: 300px; /* Ширина, чтобы разместить монетки */
+        }
+        .coins-container img {
+            width: 80px; /* Размер маленьких монеток */
+            height: 80px; /* Размер маленьких монеток */
+        }
     </style>
 </head>
 <body>
@@ -45,6 +58,11 @@
         <button class="button" onclick="increaseBalance()">
             <img src="coin.png" alt="Монетка">
         </button>
+    </div>
+    <div class="coins-container">
+        <img src="coin.png" alt="Монетка">
+        <img src="coin.png" alt="Монетка">
+        <img src="coin.png" alt="Монетка">
     </div>
 
 <script>
@@ -98,4 +116,3 @@
 
 </body>
 </html>
-
