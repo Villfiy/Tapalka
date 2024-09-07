@@ -63,7 +63,7 @@
 <body>
     <div class="container">
         <div class="balance" id="balance">Ваш баланс: 0</div>
-        <input type="text" id="key" class="input" placeholder="Введите ключ" style="display: none;"> <!-- Скрываем поле ввода -->
+        <input type="text" id="key" class="input" placeholder="Введите ключ">
         <button class="button" onclick="fetchBalance()">Получить баланс</button>
         <button class="coin-button" onclick="increaseBalance()">
             <img src="coin.png" alt="Coin">
@@ -73,57 +73,33 @@
 <script>
     let balance = 0;
 
-    function getQueryParam(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
     async function fetchBalance() {
-        const key = getQueryParam('key') || document.getElementById('key').value;
-        if (!key) {
+        const key = document.getElementById('key').value;
+        const response = await fetch(https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/get_balance?key=${encodeURIComponent(key)});
+        const data = await response.json();
+        if (data.balance !== undefined) {
+            balance = data.balance;
+            document.getElementById('balance').textContent = Ваш баланс: ${balance};
+        } else {
             document.getElementById('balance').textContent = 'Ключ не найден';
-            return;
-        }
-
-        try {
-            const response = await fetch(`https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/get_balance?key=${encodeURIComponent(key)}`);
-            const data = await response.json();
-            if (data.balance !== undefined) {
-                balance = data.balance;
-                document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
-            } else {
-                document.getElementById('balance').textContent = 'Ключ не найден';
-            }
-        } catch (error) {
-            document.getElementById('balance').textContent = 'Ошибка загрузки баланса';
         }
     }
 
     async function increaseBalance() {
-        const key = getQueryParam('key') || document.getElementById('key').value;
-        if (!key) {
-            document.getElementById('balance').textContent = 'Ключ не найден';
-            return;
-        }
-
+        const key = document.getElementById('key').value;
         balance += 1;
-        document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+        document.getElementById('balance').textContent = Ваш баланс: ${balance};
 
-        try {
-            await fetch(`https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/update_balance`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ key: key, balance: balance }),
-            });
-        } catch (error) {
-            console.error('Ошибка при обновлении баланса:', error);
-        }
+        // Отправляем обновленный баланс на сервер
+        await fetch(https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/update_balance, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: key, balance: balance }),
+        });
     }
 
-    // Загружаем баланс при загрузке страницы
-    document.addEventListener('DOMContentLoaded', fetchBalance);
 </script>
 
 </body>
