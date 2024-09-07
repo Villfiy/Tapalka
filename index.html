@@ -60,32 +60,33 @@
 <script>
     let balance = 0;
 
-    async function fetchBalance() {
-        const key = document.getElementById('key').value;
-        const response = await fetch(`https://your-replit-url/get_balance?key=${encodeURIComponent(key)}`);
-        const data = await response.json();
-        if (data.balance !== undefined) {
-            balance = data.balance;
-            document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
-        } else {
-            document.getElementById('balance').textContent = 'Ключ не найден';
-        }
-    }
-
-    async function increaseBalance() {
-        const key = document.getElementById('key').value;
-        balance += 1;
+async function fetchBalance() {
+    const key = document.getElementById('key').value;
+    const response = await fetch(`https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/get_balance?key=${encodeURIComponent(key)}`);
+    const data = await response.json();
+    if (data.balance !== undefined) {
+        balance = data.balance;
         document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
-
-        // Отправляем обновленный баланс на сервер
-        await fetch(`https://your-replit-url/update_balance`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ key: key, balance: balance }),
-        });
+    } else {
+        document.getElementById('balance').textContent = 'Ключ не найден';
     }
+}
+
+async function increaseBalance() {
+    const key = document.getElementById('key').value;
+    balance += 1;
+    document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+
+    // Отправляем обновленный баланс на сервер
+    await fetch(`https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/update_balance`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key: key, balance: balance }),
+    });
+}
+
 </script>
 
 </body>
