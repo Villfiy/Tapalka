@@ -10,10 +10,10 @@
             margin: 0;
             background-color: #f4f4f4;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
         }
         .container {
             text-align: center;
@@ -21,8 +21,13 @@
             border: 1px solid #ddd;
             background-color: #fff;
             border-radius: 8px;
-            width: 300px;
-            margin-bottom: 100px; /* Отступ, чтобы оставить место для монеток */
+            width: 80vw; /* Ширина контейнера */
+            height: 80vh; /* Высота контейнера */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
         .balance {
             font-size: 24px;
@@ -42,9 +47,9 @@
         .coins-container {
             display: flex;
             justify-content: space-between;
-            position: fixed;
-            bottom: 20px; /* Отступ от низа экрана */
-            width: 300px; /* Ширина, чтобы разместить монетки */
+            position: absolute;
+            bottom: 20px; /* Отступ от низа контейнера */
+            width: 80%; /* Ширина для размещения монеток */
         }
         .coins-container img {
             width: 80px; /* Размер маленьких монеток */
@@ -58,11 +63,11 @@
         <button class="button" onclick="increaseBalance()">
             <img src="coin.png" alt="Монетка">
         </button>
-    </div>
-    <div class="coins-container">
-        <img src="coin.png" alt="Монетка">
-        <img src="coin.png" alt="Монетка">
-        <img src="coin.png" alt="Монетка">
+        <div class="coins-container">
+            <img src="coin.png" alt="Монетка">
+            <img src="coin.png" alt="Монетка">
+            <img src="coin.png" alt="Монетка">
+        </div>
     </div>
 
 <script>
