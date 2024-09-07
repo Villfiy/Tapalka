@@ -44,23 +44,48 @@
 <body>
     <div class="container">
         <div class="balance" id="balance">Загрузка...</div>
+        <button class="button" onclick="increaseBalance()">Добавить +1</button>
     </div>
 
 <script>
+    let balance = 0;
+    const key = new URLSearchParams(window.location.search).get('key');
+
     async function fetchBalance() {
-        const key = new URLSearchParams(window.location.search).get('key');
         if (key) {
             try {
                 const response = await fetch(`https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/get_balance?key=${encodeURIComponent(key)}`);
                 const data = await response.json();
                 if (data.balance !== undefined) {
-                    document.getElementById('balance').textContent = `Ваш баланс: ${data.balance}`;
+                    balance = data.balance;
+                    document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
                 } else {
                     document.getElementById('balance').textContent = 'Ключ не найден';
                 }
             } catch (error) {
                 document.getElementById('balance').textContent = 'Ошибка при получении баланса';
                 console.error('Ошибка:', error);
+            }
+        } else {
+            document.getElementById('balance').textContent = 'Ключ не найден в URL';
+        }
+    }
+
+    async function increaseBalance() {
+        if (key) {
+            balance += 1;
+            document.getElementById('balance').textContent = `Ваш баланс: ${balance}`;
+
+            try {
+                await fetch('https://8c034d0c-0f26-4891-9e13-d5d7bd2319be-00-3u4hsgzdfnxf0.riker.replit.dev:5000/update_balance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ key: key, balance: balance }),
+                });
+            } catch (error) {
+                console.error('Ошибка при обновлении баланса:', error);
             }
         } else {
             document.getElementById('balance').textContent = 'Ключ не найден в URL';
